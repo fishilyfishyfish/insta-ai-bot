@@ -1,10 +1,28 @@
-
-import os
 from flask import Flask, request
 
 app = Flask(__name__)
 
 VERIFY_TOKEN = "insta_ai_verify"
+
+@app.route("/")
+def home():
+    return "Server is running"
+
+@app.route("/privacy")
+def privacy():
+    return """
+    <h1>Privacy Policy</h1>
+    <p>This app is used for internal testing of Instagram messaging automation.</p>
+    <p>No data is stored or shared.</p>
+    <p>Contact: leunggi2@naver.com</p>
+    """
+
+@app.route("/terms")
+def terms():
+    return """
+    <h1>Terms of Service</h1>
+    <p>This service is provided for testing purposes only.</p>
+    """
 
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
@@ -19,14 +37,5 @@ def webhook():
             return "Forbidden", 403
 
     if request.method == "POST":
-        data = request.json
-        print("INSTAGRAM EVENT:", data)
+        print("INSTAGRAM EVENT:", request.json)
         return "EVENT_RECEIVED", 200
-
-@app.route("/")
-def home():
-    return "Server is running"
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
